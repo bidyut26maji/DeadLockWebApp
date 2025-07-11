@@ -1,3 +1,4 @@
+import os
 import pickle
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
@@ -6,11 +7,22 @@ import pandas as pd
 import sys
 import json
 
-
-with open("MLmodel/products_sklearn.pkl", "rb") as f:
-    df, embeddings = pickle.load(f)
+MODEL_PATH = "MLmodel/products_sklearn.pkl"
+DATA_PATH = "MLmodel/products.csv"
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# Load or regenerate the data and embeddings
+try:
+    with open(MODEL_PATH, "rb") as f:
+        df, embeddings = pickle.load(f)
+except Exception as e:
+    print(f"[INFO] Failed to load pickle: {e}. Recomputing embeddings...")
+    df = pd.read_csv(DATA_PATH)
+    embeddings = model.encode(df["ProductName"] + " " + df["ProductType"], show_progress_bar=True)
+    os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+    with open(MODEL_PATH, "wb") as f:
+        pickle.dump((df, embeddings), f)
 
 def search_similar_products(name, product_type, price, top_k=4, price_range=500):
     query_text = f"{name} {product_type}"
@@ -36,7 +48,7 @@ def search_similar_products(name, product_type, price, top_k=4, price_range=500)
 
 if __name__ == "__main__":
     if len(sys.argv) != 4:
-        print(json.dumps({"error": "Usage: python MLmodel.py <ProductName> <ProductType> <Price>"}))
+        print(json.dumps({"error": "Usage: python MLmodel.py <Price> <ProductName> <ProductType>"}))
         sys.exit(1)
 
     name = sys.argv[2]
