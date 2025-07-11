@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Winter Wear</title>
+  <link rel="stylesheet" href="./assets/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    .product-detail-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    .product-image {
+      flex: 1 1 40%;
+      min-width: 300px;
+    }
+
+    .product-info {
+      flex: 1 1 50%;
+    }
+
+    .product-info h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .description {
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .price {
+      font-size: 1.5rem;
+      margin: 1rem 0;
+      color: #f44336;
+    }
+
+    .buy-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      background-color: #111;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    .btn:hover {
+      background-color: #333;
+    }
+
+    .suggested-products {
+      padding: 2rem;
+    }
+
+    .suggested-products h2 {
+      margin-bottom: 1rem;
+    }
+
+    .suggested-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .suggested-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .suggested-card p {
+      margin: 0.3rem 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- .....................................................................Product Detail Section.................................................. -->
+  <section class="product-detail-container">
+    <div class="product-image">
+      <img src="./assets/images/product-3.jpg" width="100%" alt="GrandAtlanticChukkaBoots100">
+    </div>
+
+    <div class="product-info">
+      <h1>Sunglass & Eye</h1>
+      <p class="description">Premium GrandAtlanticChukkaBoots...  your style. etc..... </p>
+      <p class="price">&pound;999.00</p>
+
+      <div class="buy-buttons">
+        <button class="btn">Add to Cart</button>
+        <button class="btn">Avilable on sunday</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ...........................  ......................... Suggestion Products ..................................................... -->
+    <section class="suggested-products">
+  <h2>Watch Products Around £999</h2>
+  <div class="suggested-list" id="suggestedList"> </div>
+</section>
+<!-- .................................................... Suggestion Products ..................................................... -->
+<script>
+  fetchSimilarProducts(999, 'ClassicWatch003', 'Watch');
+
+async function fetchSimilarProducts(price, ProductName, ProductType) {
+  try {
+    const response = await fetch('/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ price, ProductName, ProductType })
+    });
+
+    if (!response.ok) throw new Error(`Server error: ${response.status}`);
+    const similarProducts = await response.json();
+
+    const container = document.getElementById('suggestedList');
+    container.innerHTML = '';
+
+    similarProducts.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'suggested-card';
+
+      const fullURL = product.ProductURL;
+      const shortURL = '/' + fullURL.split('/').pop();
+
+      console.log(shortURL);  
+
+      card.innerHTML = `
+        <a href="${shortURL}">
+          <img src="${product.ProductImageURL}" alt="${product.ProductName}">
+        </a>
+        <p>${product.ProductName}</p>
+        <p>&pound;${product.ProductPrice}</p>
+      `;
+
+      container.appendChild(card);
+    });
+  } catch (err) {
+    console.error("❌ Error fetching similar products:", err);
+  }
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DeadLock - Sign Up</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .auth-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: 1000px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .auth-banner {
+      background: linear-gradient(rgba(138, 74, 243, 0.9), rgba(138, 74, 243, 0.9)),
+        url('https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1200&q=80');
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .auth-banner h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .auth-banner ul {
+      margin-bottom: 30px;
+      padding-left: 20px;
+    }
+
+    .auth-banner li {
+      margin-bottom: 10px;
+    }
+
+    .fashion-quote {
+      font-style: italic;
+      border-left: 3px solid #ff6b6b;
+      padding-left: 15px;
+      opacity: 0.9;
+    }
+
+    .auth-form {
+      padding: 40px;
+    }
+
+    .auth-form h2 {
+      margin-bottom: 30px;
+      color: #8a4af3;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #8a4af3;
+      box-shadow: 0 0 0 3px rgba(138, 74, 243, 0.2);
+    }
+
+    .form-group.checkbox {
+      display: flex;
+      align-items: center;
+    }
+
+    .form-group.checkbox label {
+      margin-left: 10px;
+      font-size: 0.9rem;
+    }
+
+    .submit-btn {
+      background: linear-gradient(to right, #8a4af3, #6a1b9a);
+      color: white;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      opacity: 0.9;
+    }
+
+    .message {
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      text-align: center;
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    @media (max-width: 768px) {
+      .auth-container {
+        grid-template-columns: 1fr;
+      }
+
+      .auth-banner {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-banner">
+      <h1>Join DeadLock</h1>
+      <ul>
+        <li>Exclusive fashion offers</li>
+        <li>Free shipping over $99</li>
+        <li>Personalized recommendations</li>
+      </ul>
+      <div class="fashion-quote">
+        "Fashion is the armor to survive the reality of everyday life." – Bill Cunningham
+      </div>
+    </div>
+
+    <div class="auth-form">
+      <h2>Create Your Account</h2>
+      <div id="messageBox"></div>
+      <form id="signupForm">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="fullname" required />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required minlength="8" />
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input type="password" id="confirmPassword" name="confirm" required minlength="8" />
+        </div>
+
+        <div class="form-group checkbox">
+          <input type="checkbox" id="terms" required />
+          <label for="terms">I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a></label>
+        </div>
+
+        <button type="submit" class="submit-btn">Sign Up</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const confirm = document.getElementById('confirmPassword').value.trim();
+      const messageBox = document.getElementById('messageBox');
+
+      const nameValid = /^[A-Za-z\s]+$/.test(name);
+      const emailValid = /^[a-zA-Z0-9._%+-]+@gmail\.com$/.test(email);
+
+      if (!nameValid) {
+        showMessage("❌ Invalid name: Only letters and spaces allowed.", true);
+        return;
+      }
+
+      if (!emailValid) {
+        showMessage("❌ Invalid Gmail: Must end with '@gmail.com'.", true);
+        return;
+      }
+
+      if (password !== confirm) {
+        showMessage("❌ Passwords do not match.", true);
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ name, email, password }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          showMessage("✅ " + result.message, false);
+        } else {
+          showMessage("❌ " + result.message, true);
+        }
+      } catch (error) {
+        console.error(error);
+        showMessage("❌ Server error.", true);
+      }
+
+      function showMessage(msg, isError) {
+        messageBox.textContent = msg;
+        messageBox.className = isError ? "message error" : "message";
+      }
+    });
+  </script>
+  <script>
+document.getElementById("signup-form").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById("signup-name").value;
+  const email = document.getElementById("signup-email").value;
+  const password = document.getElementById("signup-password").value;
+
+  fetch("/api/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ name, email, password })
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.redirect) {
+        alert(data.message); 
+        window.location.href = data.redirect;
+      } else {
+        alert(data.message); 
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Something went wrong. Please try again.");
+    });
+});
+</script>
+
+</body>
+</html>

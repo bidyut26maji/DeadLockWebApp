@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details | Deadlock</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            color: #3b82f6;
+        }
+        
+        .logo span {
+            color: #3b82f6;
+        }
+        
+        .nav-icons {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-icons a {
+            color: #475569;
+            font-size: 18px;
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s;
+        }
+        
+        .nav-icons a:hover {
+            color: #3b82f6;
+        }
+        
+        .nav-icons .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            font-size: 10px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .product-detail {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 50px;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        
+        .product-image {
+            flex: 1;
+            min-width: 300px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .product-image img {
+            max-width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+        
+        .product-image:hover img {
+            transform: scale(1.03);
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #ef4444;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .product-info {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .product-category {
+            font-size: 14px;
+            color: #64748b;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .product-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+        
+        .product-id {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 20px;
+        }
+        
+        .ratings {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ratings .stars {
+            color: #f59e0b;
+            font-size: 18px;
+        }
+        
+        .ratings .review-count {
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .current-price {
+            font-size: 36px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .original-price {
+            font-size: 22px;
+            color: #94a3b8;
+            text-decoration: line-through;
+        }
+        
+        .savings {
+            background: #dcfce7;
+            color: #16a34a;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 16px;
+        }
+        
+        .btn-buy {
+            background: linear-gradient(to right, #3b82f6, #60a5fa);
+            color: white;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-buy:hover {
+            background: linear-gradient(to right, #2563eb, #3b82f6);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-cart {
+            background: #e2e8f0;
+            color: #0f172a;
+            flex: 1;
+        }
+        
+        .btn-cart:hover {
+            background: #cbd5e1;
+        }
+        
+        .btn-wishlist {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .btn-wishlist:hover {
+            background: #e2e8f0;
+        }
+        
+        .features {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .features h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .features ul {
+            list-style: none;
+            padding-left: 10px;
+        }
+        
+        .features li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .features li::before {
+            content: "✓";
+            color: #22c55e;
+            font-weight: bold;
+        }
+        
+        .similar-products {
+            margin-bottom: 50px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0f172a;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, #3b82f6, #60a5fa);
+            border-radius: 2px;
+        }
+        
+        .view-all {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 25px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+        }
+        
+        .product-card-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #ef4444;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .product-card-img {
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f8fafc;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .product-card-img img {
+            max-width: 100%;
+            max-height: 170px;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover .product-card-img img {
+            transform: scale(1.05);
+        }
+        
+        .product-card-info {
+            padding: 20px;
+        }
+        
+        .product-card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .product-card-price {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .product-card-current {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        .product-card-original {
+            font-size: 14px;
+            color: #94a3b8;
+            text-decoration: line-through;
+        }
+        
+        .product-card-ratings {
+            color: #f59e0b;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .product-card-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .card-btn {
+            flex: 1;
+            padding: 8px;
+            border-radius: 6px;
+            border: none;
+            background: #f1f5f9;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .card-btn:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+        
+        .card-btn.cart-btn {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .card-btn.cart-btn:hover {
+            background: #2563eb;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 30px;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .product-detail {
+                flex-direction: column;
+                padding: 20px;
+            }
+            
+            .product-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .current-price {
+                font-size: 28px;
+            }
+            
+            .original-price {
+                font-size: 18px;
+            }
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #22c55e;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Dead</span>Lock
+            </div>
+            <div class="nav-icons">
+                <a href="#"><i class="fas fa-search"></i></a>
+                <a href="#">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">3</span>
+                </a>
+                <a href="#"><i class="fas fa-user"></i></a>
+            </div>
+        </div>
+        
+        <div class="product-detail">
+            <div class="product-image">
+                <div class="discount-badge">15% OFF</div>
+                <img id="productImg" src="" alt="Product Image">
+            </div>
+            
+            <div class="product-info">
+                <div class="product-category" id="productCategory">T-Shirts</div>
+                <h1 class="product-title" id="productTitle">Red T-Shirt 008</h1>
+                <div class="product-id">Product ID: <span id="productId">1234591</span></div>
+                
+                <div class="ratings">
+                    <div class="stars" id="ratingsStars"></div>
+                    <div class="review-count">(142 reviews)</div>
+                </div>
+                
+                <div class="product-price">
+                    <div class="current-price">₹1,999</div>
+                    <div class="original-price">₹2,349</div>
+                    <div class="savings">Save ₹350</div>
+                </div>
+                
+                <div class="features">
+                    <h3><i class="fas fa-tag"></i> Features & Benefits</h3>
+                    <ul>
+                        <li>Premium quality 100% cotton fabric</li>
+                        <li>Breathable and comfortable for all-day wear</li>
+                        <li>Double-stitched seams for extra durability</li>
+                        <li>Modern slim fit design</li>
+                        <li>Eco-friendly dyes and printing process</li>
+                    </ul>
+                </div>
+                
+                <div class="product-actions">
+                    <button class="btn btn-buy" onclick="buyNow()">
+                        <i class="fas fa-bolt"></i> Buy Now
+                    </button>
+                    <button class="btn btn-cart" onclick="addToCart()">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+                    <button class="btn btn-wishlist" onclick="addToWishlist()">
+                        <i class="fas fa-heart"></i> Wishlist
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="similar-products">
+            <div class="section-header">
+                <h2 class="section-title">Similar Products</h2>
+                <a href="#" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <section class="suggested-products">
+  <h2>Similar Products Around £530</h2>
+  <div class="products-grid" id="similarProducts">
+    <!-- Similar products will be dynamically added here -->
+  </div>
+</section>
+        </div>
+        
+        <div class="footer">
+            <p>© 2023 ShopHub. All rights reserved. | Premium Quality Products | Fast Delivery | Easy Returns</p>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Product added to cart!</span>
+    </div>
+    <script>
+  fetchSimilarProducts(530, 'BlueTshirt001', 'Shirt');
+
+  async function fetchSimilarProducts(price, ProductName, ProductType) {
+    try {
+      const response = await fetch('/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ price, ProductName, ProductType })
+      });
+
+      if (!response.ok) throw new Error(`Server error: ${response.status}`);
+      const similarProducts = await response.json();
+
+      const container = document.getElementById('similarProducts');
+      container.innerHTML = ''; // Clear previous entries
+
+      similarProducts.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'suggested-card';
+
+        const fullURL = product.ProductURL;
+        const shortURL = '/' + fullURL.split('/').pop(); 
+
+        card.innerHTML = `
+          <a href="${shortURL}">
+            <img src="${product.ProductImageURL}" alt="${product.ProductName}">
+          </a>
+          <p>${product.ProductName}</p>
+          <p>&pound;${product.ProductPrice}</p>
+        `;
+
+        container.appendChild(card);
+      });
+    } catch (err) {
+      console.error("❌ Error fetching similar products:", err);
+    }
+  }
+</script>
+
+    <script>
+  fetchSimilarProducts(530, 'BlueTshirt001', 'Shirt');
+
+async function fetchSimilarProducts(price, ProductName, ProductType) {
+  try {
+    const response = await fetch('/recommend', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ price, ProductName, ProductType })
+    });
+
+    if (!response.ok) throw new Error(`Server error: ${response.status}`);
+    const similarProducts = await response.json();
+
+    const container = document.getElementById('suggestedList');
+    container.innerHTML = '';
+
+    similarProducts.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'suggested-card';
+
+      const fullURL = product.ProductURL;
+      const shortURL = '/' + fullURL.split('/').pop();
+
+      console.log(shortURL);  
+
+      card.innerHTML = `
+        <a href="${shortURL}">
+          <img src="${product.ProductImageURL}" alt="${product.ProductName}">
+        </a>
+        <p>${product.ProductName}</p>
+        <p>&pound;${product.ProductPrice}</p>
+      `;
+
+      container.appendChild(card);
+    });
+  } catch (err) {
+    console.error("❌ Error fetching similar products:", err);
+  }
+}
+
+</script>
+
+    <script>
+        // Sample product data - in a real app this would come from a database
+        const products = [
+            {id: 1, name: "Blue T-Shirt", productId: "1234567", price: 530, ratings: "***", category: "Tshirt"},
+            {id: 5, name: "Red T-Shirt", productId: "1234571", price: 1999, ratings: "***", category: "Tshirt"},
+            {id: 7, name: "Red T-Shirt", productId: "1234573", price: 1999, ratings: "****", category: "Tshirt"},
+            {id: 13, name: "White T-Shirt", productId: "1234579", price: 1999, ratings: "****", category: "Tshirt"},
+            {id: 15, name: "Red T-Shirt", productId: "1234581", price: 1499, ratings: "***", category: "Tshirt"},
+            {id: 22, name: "Red T-Shirt", productId: "1234588", price: 537, ratings: "****", category: "Tshirt"},
+            {id: 24, name: "Red T-Shirt", productId: "1234590", price: 1999, ratings: "*****", category: "Tshirt"},
+            {id: 25, name: "Red T-Shirt", productId: "1234591", price: 1999, ratings: "***", category: "Tshirt"},
+            {id: 26, name: "Red T-Shirt", productId: "1234592", price: 999, ratings: "****", category: "Tshirt"},
+            {id: 29, name: "Black T-Shirt", productId: "1234595", price: 1999, ratings: "****", category: "Tshirt"},
+            {id: 33, name: "Blue T-Shirt", productId: "1234599", price: 999, ratings: "****", category: "Tshirt"},
+            {id: 34, name: "White T-Shirt", productId: "1234600", price: 999, ratings: "****", category: "Tshirt"},
+            {id: 36, name: "Red T-Shirt", productId: "1234602", price: 537, ratings: "*****", category: "Tshirt"},
+            {id: 38, name: "Red T-Shirt", productId: "1234604", price: 537, ratings: "*****", category: "Tshirt"},
+            {id: 50, name: "Red T-Shirt", productId: "1234616", price: 999, ratings: "***", category: "Tshirt"},
+            {id: 54, name: "Black T-Shirt", productId: "1234620", price: 1499, ratings: "****", category: "Tshirt"},
+            {id: 55, name: "Black T-Shirt", productId: "1234621", price: 999, ratings: "****", category: "Tshirt"},
+            {id: 56, name: "Black T-Shirt", productId: "1234622", price: 537, ratings: "****", category: "Tshirt"},
+            {id: 58, name: "Red T-Shirt", productId: "1234624", price: 530, ratings: "***", category: "Tshirt"},
+            {id: 2, name: "Digital Watch", productId: "1234568", price: 1499, ratings: "****", category: "Watch"},
+            {id: 4, name: "Smart Watch", productId: "1234570", price: 530, ratings: "***", category: "Watch"},
+            {id: 6, name: "Classic Watch", productId: "1234572", price: 999, ratings: "****", category: "Watch"},
+            {id: 9, name: "Classic Watch", productId: "1234575", price: 1999, ratings: "***", category: "Watch"},
+            {id: 16, name: "Digital Watch", productId: "1234582", price: 1499, ratings: "****", category: "Watch"},
+            {id: 17, name: "Smart Watch", productId: "1234583", price: 1999, ratings: "****", category: "Watch"},
+            {id: 21, name: "Classic Watch", productId: "1234587", price: 537, ratings: "****", category: "Watch"},
+            {id: 35, name: "Classic Watch", productId: "1234601", price: 1499, ratings: "***", category: "Watch"},
+            {id: 37, name: "Smart Watch", productId: "1234603", price: 999, ratings: "***", category: "Watch"},
+            {id: 41, name: "Smart Watch", productId: "1234607", price: 537, ratings: "*****", category: "Watch"},
+            {id: 42, name: "Digital Watch", productId: "1234608", price: 537, ratings: "***", category: "Watch"},
+            {id: 43, name: "Analog Watch", productId: "1234609", price: 1499, ratings: "****", category: "Watch"},
+            {id: 45, name: "Classic Watch", productId: "1234611", price: 1499, ratings: "*****", category: "Watch"},
+            {id: 46, name: "Digital Watch", productId: "1234612", price: 530, ratings: "*****", category: "Watch"},
+            {id: 47, name: "Digital Watch", productId: "1234613", price: 537, ratings: "****", category: "Watch"},
+            {id: 48, name: "Classic Watch", productId: "1234614", price: 1999, ratings: "*****", category: "Watch"},
+            {id: 53, name: "Analog Watch", productId: "1234619", price: 999, ratings: "*****", category: "Watch"},
+            {id: 57, name: "Smart Watch", productId: "1234623", price: 530, ratings: "*****", category: "Watch"},
+            {id: 60, name: "Smart Watch", productId: "1234626", price: 1999, ratings: "****", category: "Watch"},
+            {id: 3, name: "Formal Shoes", productId: "1234569", price: 1499, ratings: "***", category: "Shoes"},
+            {id: 12, name: "Formal Shoes", productId: "1234578", price: 1999, ratings: "***", category: "Shoes"},
+            {id: 18, name: "Running Shoes", productId: "1234584", price: 530, ratings: "***", category: "Shoes"},
+            {id: 19, name: "Running Shoes", productId: "1234585", price: 530, ratings: "****", category: "Shoes"},
+            {id: 32, name: "Running Shoes", productId: "1234598", price: 537, ratings: "*****", category: "Shoes"},
+            {id: 39, name: "Running Shoes", productId: "1234605", price: 1499, ratings: "*****", category: "Shoes"},
+            {id: 52, name: "Formal Shoes", productId: "1234618", price: 530, ratings: "***", category: "Shoes"},
+            {id: 14, name: "Boots", productId: "1234580", price: 530, ratings: "****", category: "Boots"},
+            {id: 20, name: "Boots", productId: "1234586", price: 1999, ratings: "***", category: "Boots"},
+            {id: 44, name: "Boots", productId: "1234610", price: 999, ratings: "****", category: "Boots"},
+            {id: 51, name: "Boots", productId: "1234617", price: 1499, ratings: "****", category: "Boots"},
+            {id: 27, name: "Sneakers", productId: "1234593", price: 530, ratings: "****", category: "Sneakers"},
+            {id: 8, name: "Laptop Bag", productId: "1234574", price: 537, ratings: "***", category: "Bag"},
+            {id: 10, name: "Travel Bag", productId: "1234576", price: 530, ratings: "***", category: "Bag"},
+            {id: 11, name: "School Bag", productId: "1234577", price: 530, ratings: "***", category: "Bag"},
+            {id: 23, name: "School Bag", productId: "1234589", price: 530, ratings: "****", category: "Bag"},
+            {id: 28, name: "School Bag", productId: "1234594", price: 530, ratings: "****", category: "Bag"},
+            {id: 30, name: "Travel Bag", productId: "1234596", price: 999, ratings: "****", category: "Bag"},
+            {id: 31, name: "Travel Bag", productId: "1234597", price: 530, ratings: "****", category: "Bag"},
+            {id: 40, name: "School Bag", productId: "1234606", price: 1999, ratings: "*****", category: "Bag"},
+            {id: 49, name: "Leather Bag", productId: "1234615", price: 1499, ratings: "***", category: "Bag"},
+            {id: 59, name: "School Bag", productId: "1234625", price: 1999, ratings: "*****", category: "Bag"}
+        ];
+
+        // Get product ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id') ? parseInt(urlParams.get('id')) : 25;
+        
+        // Find the current product
+        const currentProduct = products.find(p => p.id === productId);
+        
+        // Function to generate star ratings HTML
+        function generateStars(rating) {
+            const starCount = rating.length;
+            return '<i class="fas fa-star"></i>'.repeat(starCount) + 
+                   '<i class="far fa-star"></i>'.repeat(5 - starCount);
+        }
+        
+        // Function to get category image
+        function getCategoryImage(category) {
+            const images = {
+                "Tshirt": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600",
+                "Watch": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600",
+                "Shoes": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600",
+                "Boots": "https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&w=600",
+                "Sneakers": "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?auto=format&fit=crop&w=600",
+                "Bag": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600"
+            };
+            return images[category] || "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600";
+        }
+        
+        // Function to generate product description
+        function generateDescription(product) {
+            const descriptions = {
+                "Tshirt": `This premium ${product.name} is made from 100% organic cotton for ultimate comfort. The fabric is breathable and soft against the skin, perfect for everyday wear. Features a classic fit and double-stitched seams for durability.`,
+                "Watch": `The stylish ${product.name} combines elegant design with modern functionality. Featuring a scratch-resistant sapphire crystal face, water resistance up to 50m, and precision quartz movement. Perfect for both casual and formal occasions.`,
+                "Shoes": `These comfortable ${product.name} are designed for all-day wear. Made with premium leather and cushioned insoles for maximum comfort. The durable rubber sole provides excellent traction on various surfaces.`,
+                "Boots": `Durable ${product.name} crafted from waterproof leather with a cushioned insole for all-day comfort. Features a rugged outsole for superior traction and a classic design that never goes out of style.`,
+                "Sneakers": `Lightweight ${product.name} with responsive cushioning for maximum comfort. The breathable mesh upper keeps your feet cool while the flexible sole provides natural movement. Perfect for running or casual wear.`,
+                "Bag": `This practical ${product.name} features multiple compartments for organized storage. Made from durable, water-resistant material with reinforced stitching. Adjustable shoulder strap for comfortable carrying.`
+            };
+            
+            return descriptions[product.category] || `This high-quality ${product.name} is designed for both style and functionality. Made with premium materials to ensure durability and comfort.`;
+        }
+        
+        // Function to generate review count
+        function generateReviewCount() {
+            return Math.floor(Math.random() * 100) + 20;
+        }
+        
+        // Display current product details
+        if (currentProduct) {
+            document.getElementById('productCategory').textContent = currentProduct.category;
+            document.getElementById('productTitle').textContent = currentProduct.name;
+            document.getElementById('productId').textContent = currentProduct.productId;
+            document.getElementById('ratingsStars').innerHTML = generateStars(currentProduct.ratings);
+            document.getElementById('productImg').src = getCategoryImage(currentProduct.category);
+        }
+        
+        // Display similar products (same category, excluding current)
+        const similarProducts = products.filter(p => 
+            p.category === currentProduct.category && p.id !== currentProduct.id
+        ).slice(0, 4); // Show up to 4 similar products
+        
+        const similarProductsContainer = document.getElementById('similarProducts');
+        
+        similarProducts.forEach(product => {
+            // Calculate discount (random 10-25%)
+            const discount = Math.floor(Math.random() * 16) + 10;
+            const discountedPrice = Math.round(product.price * (1 - discount/100));
+            
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            productCard.innerHTML = `
+                <div class="product-card-badge">${discount}% OFF</div>
+                <div class="product-card-img">
+                    <img src="${getCategoryImage(product.category)}" alt="${product.name}">
+                </div>
+                <div class="product-card-info">
+                    <h3 class="product-card-title">${product.name}</h3>
+                    <div class="product-card-price">
+                        <span class="product-card-current">₹${discountedPrice.toLocaleString()}</span>
+                        <span class="product-card-original">₹${product.price.toLocaleString()}</span>
+                    </div>
+                    <div class="product-card-ratings">${generateStars(product.ratings)}</div>
+                    <div class="product-card-actions">
+                        <button class="card-btn" onclick="showNotification('Added to wishlist!')">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button class="card-btn cart-btn" onclick="addToCart()">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add click event to navigate to product page
+            productCard.addEventListener('click', function(e) {
+                if (!e.target.closest('.card-btn')) {
+                    window.location.href = `?id=${product.id}`;
+                }
+            });
+            
+            similarProductsContainer.appendChild(productCard);
+        });
+        
+        // Notification functions
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            
+            notificationText.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Action functions
+        function buyNow() {
+            showNotification('Redirecting to checkout...');
+            setTimeout(() => {
+                alert('Proceeding to checkout for: ' + currentProduct.name);
+            }, 1000);
+        }
+        
+        function addToCart() {
+            const cartCount = document.querySelector('.cart-count');
+            const currentCount = parseInt(cartCount.textContent);
+            cartCount.textContent = currentCount + 1;
+            
+            showNotification('Added to cart!');
+        }
+        
+        function addToWishlist() {
+            showNotification('Added to wishlist!');
+        }
+    </script>
+    
+</body>
+</html>
