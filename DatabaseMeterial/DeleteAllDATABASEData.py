@@ -12,4 +12,4 @@ cursor.execute("DELETE FROM sqlite_sequence WHERE name='users'")
 conn.commit()
 conn.close()
 
-print("All data deleted.")
+print("All data deleted.....")
