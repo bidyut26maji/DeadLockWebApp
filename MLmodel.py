@@ -10,10 +10,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 MODEL_PATH = "MLmodel/products_sklearn.pkl"
 DATA_PATH = "MLmodel/products.csv"
 
-# Load model
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-# Load or generate embeddings
 try:
     with open(MODEL_PATH, "rb") as f:
         df, embeddings = pickle.load(f)
@@ -36,7 +34,6 @@ except Exception as e:
         print(json.dumps({"error": f"Failed to load or compute model: {err}"}))
         sys.exit(1)
 
-# Similarity function
 def search_similar_products(name, product_type, price, top_k=4, price_range=500):
     query_text = f"{name} {product_type}"
     query_embedding = model.encode([query_text])
@@ -60,7 +57,6 @@ def search_similar_products(name, product_type, price, top_k=4, price_range=500)
     results = filtered.sort_values(by="similarity", ascending=False).head(top_k)
     return results[result_columns]
 
-# CLI execution
 if __name__ == "__main__":
     if len(sys.argv) != 4:
         print(json.dumps({"error": "Usage: python MLmodel.py <Price> <ProductName> <ProductType>"}))
