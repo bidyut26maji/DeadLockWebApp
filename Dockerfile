@@ -1,21 +1,33 @@
-# Use a minimal Python base image
-FROM python:3.10-slim
+FROM node:18
 
-# Set working directory
+
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip python3-venv && \
+    apt-get clean
+
+
 WORKDIR /app
 
-# Copy only requirements first for caching
-COPY requirements.txt .
 
-# Install dependencies (no cache to reduce size)
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+COPY package*.json ./
+RUN npm install
 
-# Copy the rest of the app code
+
+COPY requirements.txt ./
+
+
+RUN python3 -m venv /opt/venv && \
+    /opt/venv/bin/pip install --upgrade pip && \
+    /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+
+ENV PATH="/opt/venv/bin:$PATH"
+
+
 COPY . .
 
-# Expose port (optional, for web frameworks like Flask or FastAPI)
-EXPOSE 5000
 
-# Set default command — replace with your actual entrypoint
-CMD ["python", "MLmodel.py", "530", "BlueTshirt001", "Shirt"]
+EXPOSE 3000
+
+
+CMD ["node", "server.js"]
