@@ -1,28 +1,25 @@
-FROM node:18-slim
+FROM node:18-slim AS base
 
-# Install Python + pip + venv
-RUN apt-get update && apt-get install -y python3 python3-pip python3-venv && apt-get clean
+# Install only what's needed
+RUN apt-get update && apt-get install -y python3 python3-pip python3-venv && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /app
 
-# Copy Node.js dependencies and install
 COPY package*.json ./
 RUN npm install
 
-# Set up Python virtual environment
+# Set up Python venv
 RUN python3 -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install Python dependencies
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy rest of the code
+# Optionally cache model externally (so it's not baked into image)
+ENV TRANSFORMERS_CACHE=/app/cache
+
 COPY . .
 
-# Expose port for Node app
 EXPOSE 3000
 
-# Start Node app
 CMD ["npm", "start"]
