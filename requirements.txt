@@ -1,5 +1,9 @@
-sentence-transformers
-scikit-learn
-numpy
-pandas
-joblib
+__pycache__/
+*.pkl
+*.joblib
+*.xlsx
+*.csv
+node_modules/
+Dockerfile
+.dockerignore
+.env
