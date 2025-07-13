@@ -1,13 +1,20 @@
+# Use slim base image
 FROM python:3.10-slim
 
-
+# Set working dir
 WORKDIR /app
 
+# Copy only required files first
+COPY requirements.txt .
+
+# Install dependencies without cache
+RUN pip install --no-cache-dir --root-user-action=ignore -r requirements.txt
+
+# Now copy the rest of the code
 COPY . .
 
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+# Expose port (if you're using FastAPI/Flask/Streamlit etc.)
+EXPOSE 8000
 
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
-
-CMD ["python", "MLmodel.py", "530", "BlueTshirt001", "Shirt"]
+# Start your server (change as per your entrypoint)
+CMD ["python", "MLmodel.py"]
