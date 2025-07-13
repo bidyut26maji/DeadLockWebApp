@@ -1,10 +1,11 @@
 __pycache__/
 *.pkl
-*.joblib
-*.pt
-*.bin
-assets/images/
-.env
 *.zip
+*.csv
+*.xlsx
 node_modules/
-.cache/
+assets/images/
+.git
+*.log
+Dockerfile
+README.md
