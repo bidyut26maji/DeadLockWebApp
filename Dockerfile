@@ -1,41 +1,39 @@
-# Stage 1: Python model preprocessing
-FROM python:3.10-slim as python-builder
+# ---------- Stage 1: Install Python dependencies and prepare model ----------
+FROM python:3.10-slim AS python-builder
 
 WORKDIR /app
 
-# Copy Python dependencies
+# Install required packages
 COPY requirements.txt .
-
-# Install Python libraries
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy model code and dataset
-COPY MLmodel/products.xlsx ./MLmodel/products.xlsx
+# Copy only the already-precomputed model (NOT the large .xlsx)
+COPY MLmodel/products_sklearn_compressed.joblib ./MLmodel/products_sklearn_compressed.joblib
 COPY MLmodel.py .
 
-# Run preprocessing and save compressed .joblib file
-RUN python MLmodel.py 530 "SampleProduct" "SampleType"
-
-# Stage 2: Final container with Node.js and Python
+# ---------- Stage 2: Node.js App with Python model support ----------
 FROM node:18-slim
 
 WORKDIR /app
 
-# Copy Node.js dependencies
+# Copy Node.js files
 COPY package*.json ./
 RUN npm install
 
 # Copy app code
 COPY . .
 
-# Only copy the final model file (keep image size small)
+# Copy model and Python code from the builder stage
 COPY --from=python-builder /app/MLmodel/products_sklearn_compressed.joblib ./MLmodel/products_sklearn_compressed.joblib
+COPY --from=python-builder /app/MLmodel.py .
 
-# Install Python and dependencies in Node image
+# Install Python and dependencies in Node container
 RUN apt-get update && apt-get install -y python3 python3-pip && \
     pip3 install --no-cache-dir -r requirements.txt && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Expose app port (adjust if needed)
 EXPOSE 3000
 
+# Start your Node.js app
 CMD ["npm", "start"]
