@@ -1,9 +1,9 @@
-*.xlsx
-*.csv
-*.pkl
-*.joblib
+node_modules
 __pycache__/
-node_modules/
+*.pkl
+*.csv
+*.xlsx
+*.log
+*.db
 .DS_Store
-.dockerignore
-Dockerfile
+*.zip
