@@ -1,4 +1,5 @@
-pandas
-numpy
-scikit-learn
 sentence-transformers
+scikit-learn
+numpy
+pandas
+joblib
