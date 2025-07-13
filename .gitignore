@@ -1,0 +1,14 @@
+__pycache__/
+*.pkl
+*.joblib
+*.zip
+*.tar
+*.pt
+*.bin
+cache/
+*.csv
+node_modules/
+.env
+*.log
+MLmodel/products_sklearn.joblib
+assets/images/
