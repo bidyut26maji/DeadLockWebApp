@@ -17,10 +17,10 @@ try:
 except Exception as e:
     print(f"[INFO] Failed to load precomputed model: {e}", file=sys.stderr)
     try:
-        df = pd.read_csv(DATA_PATH)
+        df = pd.read_excel(DATA_PATH)  # ✅ FIXED
 
         if not all(col in df.columns for col in ["ProductName", "ProductType", "ProductPrice"]):
-            raise ValueError("Missing required columns in CSV.")
+            raise ValueError("Missing required columns in Excel.")
 
         text_data = df["ProductName"].fillna("") + " " + df["ProductType"].fillna("")
         embeddings = model.encode(text_data.tolist(), show_progress_bar=True)
