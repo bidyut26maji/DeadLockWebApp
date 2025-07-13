@@ -1,35 +1,35 @@
 import os
-import pickle
-import json
 import sys
+import json
+import joblib
 import pandas as pd
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 
-MODEL_PATH = "MLmodel/products_sklearn.pkl"
-DATA_PATH = "MLmodel/products.csv"
+MODEL_PATH = "MLmodel/products_sklearn_compressed.joblib"
+DATA_PATH = "MLmodel/products.xlsx"
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 try:
-    with open(MODEL_PATH, "rb") as f:
-        df, embeddings = pickle.load(f)
+    df, embeddings = joblib.load(MODEL_PATH)
 except Exception as e:
-    print(f"[INFO] Failed to load precomputed model: {e}")
+    print(f"[INFO] Failed to load precomputed model: {e}", file=sys.stderr)
     try:
         df = pd.read_csv(DATA_PATH)
+
         if not all(col in df.columns for col in ["ProductName", "ProductType", "ProductPrice"]):
             raise ValueError("Missing required columns in CSV.")
 
         text_data = df["ProductName"].fillna("") + " " + df["ProductType"].fillna("")
         embeddings = model.encode(text_data.tolist(), show_progress_bar=True)
+        embeddings = np.array(embeddings, dtype=np.float32)
 
         os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
-        with open(MODEL_PATH, "wb") as f:
-            pickle.dump((df, embeddings), f)
+        joblib.dump((df, embeddings), MODEL_PATH, compress=3)
 
-        print("[INFO] Model and embeddings saved successfully.")
+        print("[INFO] Model and embeddings saved successfully.", file=sys.stderr)
     except Exception as err:
         print(json.dumps({"error": f"Failed to load or compute model: {err}"}))
         sys.exit(1)
@@ -74,7 +74,7 @@ if __name__ == "__main__":
     try:
         results = search_similar_products(name, product_type, price)
         output = results.to_dict(orient="records")
-        print(json.dumps(output, ensure_ascii=False, indent=2))
+        print(json.dumps(output, ensure_ascii=False, indent=2))  
     except Exception as e:
         print(json.dumps({"error": f"Failed to generate recommendations: {e}"}))
         sys.exit(1)
