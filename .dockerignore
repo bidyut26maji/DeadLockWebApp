@@ -1,8 +1,10 @@
-**/__pycache__/
-**/*.pyc
-assets/images/
-MLmodel/products.xlsx
-MLmodel/products_sklearn.pkl
-*.zip
-*.tar.gz
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
 *.log
+.env
+*.csv
+*.xlsx
+assets/images/
+products.xlsx
