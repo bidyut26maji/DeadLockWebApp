@@ -1,45 +1,39 @@
-# ---------- Stage 1: Python builder ----------
+# -------- Stage 1: Python Build --------
 FROM python:3.10-slim AS python-builder
 
 WORKDIR /app
 
-# Copy only the necessary files first
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY requirements.txt ./
 
-# Copy model generation script and data
+# Use this to override system-managed pip restrictions (PEP 668)
+RUN pip install --break-system-packages --no-cache-dir -r requirements.txt
+
 COPY MLmodel.py .
 COPY MLmodel/products.xlsx ./MLmodel/products.xlsx
 
-# Generate the compressed joblib model
 RUN python MLmodel.py 530 "SampleProduct" "SampleType"
 
-# ---------- Stage 2: Node.js runtime ----------
+# -------- Stage 2: Node.js + Python --------
 FROM node:18-slim
 
 WORKDIR /app
 
-# Install Python & pip in Node.js container
+# Install Python
 RUN apt-get update && apt-get install -y python3 python3-pip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copy only necessary model files
+# Copy precomputed model only (not .xlsx)
 COPY --from=python-builder /app/MLmodel/products_sklearn_compressed.joblib ./MLmodel/products_sklearn_compressed.joblib
 
-# Copy Python logic and requirements
+# Python logic
 COPY MLmodel.py .
 COPY requirements.txt .
+RUN pip3 install --break-system-packages --no-cache-dir -r requirements.txt
 
-# Install Python deps using break-system-packages (PEP 668 workaround)
-RUN pip3 install --no-cache-dir --break-system-packages -r requirements.txt
-
-# Copy Node.js app
+# Node.js logic
 COPY package*.json ./
 RUN npm install
 COPY . .
 
-# Expose the port your Node.js app listens on
 EXPOSE 3000
-
-# Start the Node.js app
 CMD ["npm", "start"]
