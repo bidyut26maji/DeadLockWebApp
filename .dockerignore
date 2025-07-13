@@ -1,9 +1,10 @@
-
-# .dockerignore
-
-**/__pycache__/
-**/*.pkl
-cache/
+__pycache__/
+*.pkl
+*.joblib
+*.pt
+*.bin
+assets/images/
 .env
+*.zip
 node_modules/
-MLmodel/products_sklearn.joblib
+.cache/
