@@ -1,1 +1,11 @@
 
+# .dockerignore
+*.pkl
+*.npy
+__pycache__/
+*.csv
+*.xlsx
+*.pt
+*.onnx
+venv/
+.cache/
