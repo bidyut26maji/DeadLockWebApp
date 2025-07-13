@@ -1,20 +1,29 @@
-# Use slim base image
-FROM python:3.10-slim
+# Use a base image that has both Node.js and Python
+FROM node:18-slim
 
-# Set working dir
+# Install Python + pip
+RUN apt-get update && apt-get install -y python3 python3-pip && apt-get clean
+
+# Set working directory
 WORKDIR /app
 
-# Copy only required files first
-COPY requirements.txt .
+# Copy Node.js dependencies first
+COPY package*.json ./
 
-# Install dependencies without cache
-RUN pip install --no-cache-dir --root-user-action=ignore -r requirements.txt
+# Install Node.js dependencies
+RUN npm install
 
-# Now copy the rest of the code
+# Copy Python requirements first
+COPY requirements.txt ./
+
+# Install Python libraries
+RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Copy the rest of your code
 COPY . .
 
-# Expose port (if you're using FastAPI/Flask/Streamlit etc.)
-EXPOSE 8000
+# Expose Node.js server port (adjust if needed)
+EXPOSE 3000
 
-# Start your server (change as per your entrypoint)
-CMD ["python", "MLmodel.py"]
+# Start your Node.js app
+CMD ["npm", "start"]
