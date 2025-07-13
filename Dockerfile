@@ -1,30 +1,21 @@
-FROM node:18-slim
+# Use a minimal Python base image
+FROM python:3.10-slim
 
-# Install minimal Python + pip + venv
-RUN apt-get update && \
-    apt-get install -y python3 python3-pip python3-venv && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and install Node.js dependencies first
-COPY package*.json ./
-RUN npm install
+# Copy only requirements first for caching
+COPY requirements.txt .
 
-# Create Python virtual environment and install ML deps
-COPY requirements.txt ./
-RUN python3 -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies (no cache to reduce size)
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Download ML model once (optional)
-RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
-
-# Copy remaining code
+# Copy the rest of the app code
 COPY . .
 
-# Expose your web port
-EXPOSE 3000
+# Expose port (optional, for web frameworks like Flask or FastAPI)
+EXPOSE 5000
 
-CMD ["npm", "start"]
+# Set default command — replace with your actual entrypoint
+CMD ["python", "MLmodel.py", "530", "BlueTshirt001", "Shirt"]
