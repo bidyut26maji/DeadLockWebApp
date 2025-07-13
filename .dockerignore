@@ -1,9 +1,7 @@
 node_modules
+*.log
+MLmodel/products.xlsx
 __pycache__/
 *.pkl
-*.csv
-*.xlsx
-*.log
-*.db
-.DS_Store
-*.zip
+*.pt
+*.joblib
